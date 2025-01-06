@@ -7,7 +7,6 @@ app = Flask(__name__)
 
 ID_FILE = "generated_ids.json"
 
-
 def load_ids():
     if os.path.exists(ID_FILE):
         with open(ID_FILE, 'r') as file:
@@ -18,22 +17,18 @@ def load_ids():
                 return {}
     return {}
 
-
 def save_ids(data):
     with open(ID_FILE, 'w') as file:
         json.dump(data, file, indent=4)
-
 
 def generate_unique_id(base_id, existing_ids):
     while any(base_id == entry["unique_id"] for entry in existing_ids.values()):
         base_id += str(random.randint(10, 99))
     return base_id
 
-
 @app.route('/')
 def home():
     return render_template('index.html')
-
 
 @app.route('/generate', methods=['POST'])
 def generate_id():
@@ -77,7 +72,6 @@ def generate_id():
     save_ids(stored_ids)
 
     return render_template('index.html', unique_id=unique_id, current_id_count=len(stored_ids))
-
 
 if __name__ == '__main__':
     app.run(debug=True)
