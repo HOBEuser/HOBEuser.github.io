@@ -8,7 +8,7 @@
 <body>
     <h1>Welcome to the ID Generation and Checking Server!</h1>
     <h2>Generate ID</h2>
-    <form action="/generate_id" method="POST">
+    <form id="generateForm">
         <label for="name">Name:</label><br>
         <input type="text" id="name" name="name" required><br>
         <label for="dob">Date of Birth (YYYYMMDD):</label><br>
@@ -24,5 +24,30 @@
         <input type="text" id="id" name="id" required><br><br>
         <input type="submit" value="Check ID">
     </form>
+
+    <script>
+        document.getElementById('generateForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            const dob = document.getElementById('dob').value;
+            const key = document.getElementById('key').value;
+
+            fetch('/generate_id', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name, dob, key })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    alert(`Generated ID: ${data.unique_id}`);
+                }
+            });
+        });
+    </script>
 </body>
 </html>
