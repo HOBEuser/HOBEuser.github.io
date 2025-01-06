@@ -3,6 +3,11 @@ import random
 import json
 import os
 
+@app.route('/generate_id', methods=['POST'])
+def generate_id():
+    data = request.get_json()
+    if not data or not all(key in data for key in ('name', 'dob', 'key')):
+        return jsonify({"error": "Invalid input, name, dob, and key are required"}), 400
 app = Flask(__name__)
 
 ID_FILE = "generated_ids.json"
