@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ID List</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            padding-top: 50px;
+        }
+        .container {
+            max-width: 600px;
+        }
+    </style>
+    <script>
+        function loadNames() {
+            const names = JSON.parse(localStorage.getItem('names')) || [];
+            const nameList = document.getElementById('nameList');
+            nameList.innerHTML = names.map(name => `<li class="list-group-item">${name}</li>`).join('');
+        }
+    </script>
+</head>
+<body onload="loadNames()">
+    <div class="container">
+        <h1 class="text-center">ID List</h1>
+        <ul id="nameList" class="list-group"></ul>
+        <a href="index.html" class="btn btn-primary mt-3">Back to Generator</a>
+    </div>
+</body>
+</html>
