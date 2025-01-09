@@ -41,6 +41,11 @@
             const rand = Math.floor(Math.random() * 9000) + 1000;
             const uniqueID = dob + rand + encryptedName;
 
+            // Save the name to local storage
+            let names = JSON.parse(localStorage.getItem('names')) || [];
+            names.push(name);
+            localStorage.setItem('names', JSON.stringify(names));
+
             document.getElementById('result').innerHTML = `
                 <div class="alert alert-success mt-3" role="alert">
                     Unique ID: ${uniqueID}<br>
@@ -68,6 +73,7 @@
             <button type="submit" class="btn btn-primary">Generate ID</button>
         </form>
         <div id="result"></div>
+        <a href="id_list.html" class="btn btn-secondary mt-3">View ID List</a>
     </div>
 </body>
 </html>
