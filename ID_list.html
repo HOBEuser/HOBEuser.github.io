@@ -14,18 +14,17 @@
         }
     </style>
     <script>
-        function loadNames() {
-            const names = JSON.parse(localStorage.getItem('names')) || [];
-            const nameList = document.getElementById('nameList');
-            nameList.innerHTML = names.map(name => `<li class="list-group-item">${name}</li>`).join('');
+        function loadIDs() {
+            const ids = JSON.parse(localStorage.getItem('ids')) || [];
+            const idList = document.getElementById('idList');
+            idList.innerHTML = ids.map(item => `<li class="list-group-item">${item.name}: ${item.uniqueID}</li>`).join('');
         }
     </script>
 </head>
-<body onload="loadNames()">
+<body onload="loadIDs()">
     <div class="container">
         <h1 class="text-center">ID List</h1>
-        <ul id="nameList" class="list-group"></ul>
-        <a href="ID_list.html" class="btn btn-secondary mt-3">View ID List</a>
+        <ul id="idList" class="list-group"></ul>
     </div>
 </body>
 </html>
