@@ -41,7 +41,7 @@
             const rand = Math.floor(Math.random() * 9000) + 1000;
             const uniqueID = dob + rand + encryptedName;
 
-            // Save the unique ID and name to local storage
+    
             let ids = JSON.parse(localStorage.getItem('ids')) || [];
             ids.push({ name: name, uniqueID: uniqueID });
             localStorage.setItem('ids', JSON.stringify(ids));
