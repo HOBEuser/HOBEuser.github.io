@@ -19,6 +19,31 @@
             const idList = document.getElementById('idList');
             idList.innerHTML = ids.map(item => `<li class="list-group-item">${item.name}: ${item.uniqueID}</li>`).join('');
         }
+
+        function checkID() {
+            const inputID = document.getElementById('checkID').value.trim();
+            if (!inputID) {
+                alert("Please enter an ID to check.");
+                return;
+            }
+
+            const ids = JSON.parse(localStorage.getItem('ids')) || [];
+            const found = ids.find(item => item.uniqueID === inputID);
+
+            if (found) {
+                document.getElementById('checkResult').innerHTML = `
+                    <div class="alert alert-success mt-3" role="alert">
+                        ID is valid. Owner: ${found.name}
+                    </div>
+                `;
+            } else {
+                document.getElementById('checkResult').innerHTML = `
+                    <div class="alert alert-danger mt-3" role="alert">
+                        ID is invalid.
+                    </div>
+                `;
+            }
+        }
     </script>
 </head>
 <body onload="loadIDs()">
@@ -26,8 +51,13 @@
         <h1 class="text-center">ID List</h1>
         <ul id="idList" class="list-group"></ul>
     </div>
-    <div>
-        button
+    <div class="container mt-3">
+        <div class="form-group">
+            <label for="checkID">Check ID:</label>
+            <input type="text" class="form-control" id="checkID" name="checkID">
+            <button type="button" class="btn btn-secondary mt-2" onclick="checkID()">Check ID</button>
+        </div>
+        <div id="checkResult"></div>
     </div>
 </body>
 </html>
