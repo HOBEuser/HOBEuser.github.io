@@ -15,11 +15,13 @@
     </style>
     <script src="https://unpkg.com/kvdb.io@v1.0"></script>
     <script>
-        const kvdbStorage = KVdb.bucket(MEzXEdP7SVegr4DsxsKBgY).localStorage();
+        const kvdbStorage = KVdb.bucket('MEzXEdP7SVegr4DsxsKBgY').localStorage();
 
         function loadIDs() {
             kvdbStorage.getItem('ids').then(ids => {
+                console.log('Retrieved IDs:', ids);
                 ids = JSON.parse(ids) || [];
+                console.log('Parsed IDs:', ids);
                 const idList = document.getElementById('idList');
                 idList.innerHTML = ids.map(item => `<li class="list-group-item">${item.name}: ${item.uniqueID}</li>`).join('');
             }).catch(err => {
@@ -36,7 +38,9 @@
             }
 
             kvdbStorage.getItem('ids').then(ids => {
+                console.log('Retrieved IDs for checking:', ids);
                 ids = JSON.parse(ids) || [];
+                console.log('Parsed IDs for checking:', ids);
                 const found = ids.find(item => item.uniqueID === inputID);
 
                 if (found) {
