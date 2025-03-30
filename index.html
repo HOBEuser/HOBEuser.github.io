@@ -13,7 +13,10 @@
             max-width: 600px;
         }
     </style>
+    <script src="https://unpkg.com/kvdb.io@v1.0"></script>
     <script>
+        const kvdbStorage = KVdb.bucket(MEzXEdP7SVegr4DsxsKBgY).localStorage();
+
         function generateUniqueID() {
             const name = document.getElementById('name').value.trim().toUpperCase();
             const key = parseInt(document.getElementById('key').value);
@@ -41,16 +44,20 @@
             const rand = Math.floor(Math.random() * 9000) + 1000;
             const uniqueID = dob + rand + encryptedName;
 
-    
-            let ids = JSON.parse(localStorage.getItem('ids')) || [];
-            ids.push({ name: name, uniqueID: uniqueID });
-            localStorage.setItem('ids', JSON.stringify(ids));
-
-            document.getElementById('result').innerHTML = `
-                <div class="alert alert-success mt-3" role="alert">
-                    Unique ID: ${uniqueID}<br>
-                </div>
-            `;
+            kvdbStorage.getItem('ids').then(ids => {
+                ids = JSON.parse(ids) || [];
+                ids.push({ name: name, uniqueID: uniqueID });
+                return kvdbStorage.setItem('ids', JSON.stringify(ids));
+            }).then(() => {
+                document.getElementById('result').innerHTML = `
+                    <div class="alert alert-success mt-3" role="alert">
+                        Unique ID: ${uniqueID}<br>
+                    </div>
+                `;
+            }).catch(err => {
+                console.error(err);
+                alert("An error occurred while saving the ID.");
+            });
         }
     </script>
 </head>
@@ -63,7 +70,7 @@
                 <input type="text" class="form-control" id="name" name="name" required>
             </div>
             <div class="form-group">
-                <label for="key">please put in a number from 0ne to twenty-five :</label>
+                <label for="key">Key (1-25):</label>
                 <input type="number" class="form-control" id="key" name="key" min="1" max="25" required>
             </div>
             <div class="form-group">
@@ -76,5 +83,3 @@
     </div>
 </body>
 </html>
-
-      
