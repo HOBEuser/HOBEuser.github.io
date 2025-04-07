@@ -13,21 +13,11 @@
             max-width: 600px;
         }
     </style>
-    <script src="https://unpkg.com/kvdb.io@v1.0"></script>
     <script>
-        const kvdbStorage = KVdb.bucket('MEzXEdP7SVegr4DsxsKBgY').localStorage();
-
         function loadIDs() {
-            kvdbStorage.getItem('ids').then(ids => {
-                console.log('Retrieved IDs:', ids);
-                ids = JSON.parse(ids) || [];
-                console.log('Parsed IDs:', ids);
-                const idList = document.getElementById('idList');
-                idList.innerHTML = ids.map(item => `<li class="list-group-item">${item.name}: ${item.uniqueID}</li>`).join('');
-            }).catch(err => {
-                console.error(err);
-                alert("An error occurred while loading the IDs.");
-            });
+            const ids = JSON.parse(localStorage.getItem('ids')) || [];
+            const idList = document.getElementById('idList');
+            idList.innerHTML = ids.map(item => `<li class="list-group-item">${item.name}: ${item.uniqueID}</li>`).join('');
         }
 
         function checkID() {
@@ -37,29 +27,22 @@
                 return;
             }
 
-            kvdbStorage.getItem('ids').then(ids => {
-                console.log('Retrieved IDs for checking:', ids);
-                ids = JSON.parse(ids) || [];
-                console.log('Parsed IDs for checking:', ids);
-                const found = ids.find(item => item.uniqueID === inputID);
+            const ids = JSON.parse(localStorage.getItem('ids')) || [];
+            const found = ids.find(item => item.uniqueID === inputID);
 
-                if (found) {
-                    document.getElementById('checkResult').innerHTML = `
-                        <div class="alert alert-success mt-3" role="alert">
-                            ID is valid. Owner: ${found.name}
-                        </div>
-                    `;
-                } else {
-                    document.getElementById('checkResult').innerHTML = `
-                        <div class="alert alert-danger mt-3" role="alert">
-                            ID is invalid.
-                        </div>
-                    `;
-                }
-            }).catch(err => {
-                console.error(err);
-                alert("An error occurred while checking the ID.");
-            });
+            if (found) {
+                document.getElementById('checkResult').innerHTML = `
+                    <div class="alert alert-success mt-3" role="alert">
+                        ID is valid. Owner: ${found.name}
+                    </div>
+                `;
+            } else {
+                document.getElementById('checkResult').innerHTML = `
+                    <div class="alert alert-danger mt-3" role="alert">
+                        ID is invalid.
+                    </div>
+                `;
+            }
         }
     </script>
 </head>
@@ -76,7 +59,5 @@
         </div>
         <div id="checkResult"></div>
     </div>
-    
-
 </body>
 </html>
