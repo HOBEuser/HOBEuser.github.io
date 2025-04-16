@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
@@ -15,7 +14,12 @@
         }
     </style>
     <script>
-        function generateUniqueID() {
+        // Initialize Supabase client
+        const supabaseUrl = 'YOUR_SUPABASE_URL'; // Replace with your Supabase URL
+        const supabaseKey = 'YOUR_SUPABASE_ANON_KEY'; // Replace with your Supabase Anon Key
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+        async function generateUniqueID() {
             const name = document.getElementById('name').value.trim().toUpperCase();
             const key = parseInt(document.getElementById('key').value);
             const dob = document.getElementById('dob').value.trim();
@@ -44,17 +48,21 @@
             const rand = Math.floor(Math.random() * 9000) + 1000; // Generate random 4-digit number
             const uniqueID = dob + rand + encryptedName;
 
-            // Save the unique ID to localStorage
-            let ids = JSON.parse(localStorage.getItem('ids')) || [];
-            ids.push({ name: name, uniqueID: uniqueID });
-            localStorage.setItem('ids', JSON.stringify(ids));
+            // Save the unique ID to Supabase
+            const { data, error } = await supabase
+                .from('ids') // Replace with your table name
+                .insert([{ name: name, unique_id: uniqueID }]); // Ensure the column names match your table schema
 
-            // Display the result
-            document.getElementById('result').innerHTML = `
-                <div class="alert alert-success mt-3" role="alert">
-                    Unique ID: ${uniqueID}<br>
-                </div>
-            `;
+            if (error) {
+                alert("Error saving ID: " + error.message);
+            } else {
+                // Display the result
+                document.getElementById('result').innerHTML = `
+                    <div class="alert alert-success mt-3" role="alert">
+                        Unique ID: ${uniqueID} saved successfully!<br>
+                    </div>
+                `;
+            }
         }
     </script>
 </head>
@@ -67,16 +75,4 @@
                 <input type="text" class="form-control" id="name" name="name" required>
             </div>
             <div class="form-group">
-                <label for="key">Please enter a number between 1 and 25:</label>
-                <input type="number" class="form-control" id="key" name="key" min="1" max="25" required>
-            </div>
-            <div class="form-group">
-                <label for="dob">Enter a four-digit number (e.g., 1234):</label>
-                <input type="text" class="form-control" id="dob" name="dob" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Generate ID</button>
-        </form>
-        <div id="result"></div>
-    </div>
-</body>
-</html>
+                <label for="key">Please enter a number between 1 and
