@@ -20,33 +20,36 @@
             const key = parseInt(document.getElementById('key').value);
             const dob = document.getElementById('dob').value.trim();
 
-            if (!name || isNaN(key) || key < 1 || key > 25 || !dob) {
-                alert("Invalid input. Ensure you provide a name, a key between 1 and 25, and a date of birth.");
+            // Validate inputs
+            if (!name || isNaN(key) || key < 1 || key > 25 || !/^\d{4}$/.test(dob)) {
+                alert("Invalid input. Ensure you provide a name, a key between 1 and 25, and a 4-digit number for DOB.");
                 return;
             }
 
-            const ALF = "ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            const ALF = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
             let encryptedName = "";
 
+            // Encrypt the name using the key
             for (let i = 0; i < name.length; i++) {
                 const currentCharacter = name[i];
                 const position = ALF.indexOf(currentCharacter);
                 if (position === -1) {
-                    encryptedName += currentCharacter;
+                    encryptedName += currentCharacter; // Non-alphabet characters remain unchanged
                 } else {
                     const newPosition = (position + key) % 26;
                     encryptedName += ALF[newPosition];
                 }
             }
 
-            const rand = Math.floor(Math.random() * 9000) + 1000;
+            const rand = Math.floor(Math.random() * 9000) + 1000; // Generate random 4-digit number
             const uniqueID = dob + rand + encryptedName;
 
-    
+            // Save the unique ID to localStorage
             let ids = JSON.parse(localStorage.getItem('ids')) || [];
             ids.push({ name: name, uniqueID: uniqueID });
             localStorage.setItem('ids', JSON.stringify(ids));
 
+            // Display the result
             document.getElementById('result').innerHTML = `
                 <div class="alert alert-success mt-3" role="alert">
                     Unique ID: ${uniqueID}<br>
@@ -64,11 +67,11 @@
                 <input type="text" class="form-control" id="name" name="name" required>
             </div>
             <div class="form-group">
-                <label for="key">please put in a number from 0ne to twenty-five :</label>
+                <label for="key">Please enter a number between 1 and 25:</label>
                 <input type="number" class="form-control" id="key" name="key" min="1" max="25" required>
             </div>
             <div class="form-group">
-                <label for="dob"> Four Digit Number (Example:1234):</label>
+                <label for="dob">Enter a four-digit number (e.g., 1234):</label>
                 <input type="text" class="form-control" id="dob" name="dob" required>
             </div>
             <button type="submit" class="btn btn-primary">Generate ID</button>
@@ -77,5 +80,3 @@
     </div>
 </body>
 </html>
-
-      
